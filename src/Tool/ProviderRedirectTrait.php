@@ -3,10 +3,13 @@
 namespace League\OAuth2\Client\Tool;
 
 use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Message\Request;
 use GuzzleHttp\Psr7\Uri;
 use InvalidArgumentException;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Message\RequestInterface;
+use GuzzleHttp\Message\ResponseInterface;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\Request as Psr7Request;
 
 trait ProviderRedirectTrait
 {
@@ -32,13 +35,16 @@ trait ProviderRedirectTrait
 
         while ($attempts < $this->redirectLimit) {
             $attempts++;
-            $response = $this->getHttpClient()->send($request, [
-                'allow_redirects' => false
-            ]);
+            $this->getHttpClient()->setDefaultOption('allow_redirects', false);
+            $response = $this->getHttpClient()->send($request);
 
             if ($this->isRedirect($response)) {
                 $redirectUrl = new Uri($response->getHeader('Location')[0]);
-                $request = $request->withUri($redirectUrl);
+                $psr7request = new Psr7Request($request->getMethod(), $redirectUrl);
+                $psr7request = $psr7request->withUri($redirectUrl);
+                $request->setUrl((string)$psr7request->getUri());
+
+                //$request = $request->withUri($redirectUrl);
             } else {
                 break;
             }
@@ -50,7 +56,7 @@ trait ProviderRedirectTrait
     /**
      * Returns the HTTP client instance.
      *
-     * @return GuzzleHttp\ClientInterface
+     * @return ClientInterface
      */
     abstract public function getHttpClient();
 

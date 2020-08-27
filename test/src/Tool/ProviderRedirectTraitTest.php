@@ -7,8 +7,9 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use League\OAuth2\Client\Tool\ProviderRedirectTrait;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\RequestInterface;
+use GuzzleHttp\Message\ResponseInterface;
+use GuzzleHttp\Message\RequestInterface;
+use GuzzleHttp\Psr7\Request as Psr7Request;
 
 class ProviderRedirectTraitTest extends TestCase
 {
@@ -72,7 +73,8 @@ class ProviderRedirectTraitTest extends TestCase
         $redirectUrl = uniqid();
 
         $request = Phony::mock(RequestInterface::class);
-        $request->withUri->returns($request);
+        //$request->withUri->returns($request);
+        $request->getMethod->returns('get');
 
         $response = Phony::mock(ResponseInterface::class);
         $response->hasHeader->with('Location')->returns(true);
@@ -94,7 +96,8 @@ class ProviderRedirectTraitTest extends TestCase
         $status = 200;
 
         $request = Phony::mock(RequestInterface::class);
-        $request->withUri->returns($request);
+        //$request->withUri->returns($request);
+        $request->getMethod->returns('get');
 
         $response = Phony::mock(ResponseInterface::class);
         $response->hasHeader->with('Location')->returns(true);
@@ -115,7 +118,8 @@ class ProviderRedirectTraitTest extends TestCase
         $result = ['foo' => 'bar'];
 
         $request = Phony::mock(RequestInterface::class);
-        $request->withUri->returns($request);
+        //$request->withUri->returns($request);
+        $request->getMethod->returns('get');
 
         $response = Phony::mock(ResponseInterface::class);
         $response->getStatusCode->returns($status);

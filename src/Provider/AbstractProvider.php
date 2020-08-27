@@ -28,8 +28,8 @@ use League\OAuth2\Client\Tool\ArrayAccessorTrait;
 use League\OAuth2\Client\Tool\GuardedPropertyTrait;
 use League\OAuth2\Client\Tool\QueryBuilderTrait;
 use League\OAuth2\Client\Tool\RequestFactory;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Message\RequestInterface;
+use GuzzleHttp\Message\ResponseInterface;
 use UnexpectedValueException;
 
 /**
@@ -150,10 +150,10 @@ abstract class AbstractProvider
      */
     protected function getAllowedClientOptions(array $options)
     {
-        $client_options = ['timeout', 'proxy'];
+        $client_options = ['timeout', 'proxy', 'defaults'];
 
         // Only allow turning off ssl verification if it's for a proxy
-        if (!empty($options['proxy'])) {
+        if (!empty($options['defaults']['proxy'])) {
             $client_options[] = 'verify';
         }
 

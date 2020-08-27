@@ -4,7 +4,7 @@ namespace League\OAuth2\Client\Test\Tool;
 
 use League\OAuth2\Client\Tool\RequestFactory;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\RequestInterface;
+use GuzzleHttp\Message\RequestInterface;
 
 class RequestFactoryTest extends TestCase
 {
@@ -22,11 +22,11 @@ class RequestFactoryTest extends TestCase
 
         $this->assertInstanceOf(RequestInterface::class, $request);
         $this->assertSame(strtoupper($method), $request->getMethod());
-        $this->assertSame($uri, (string) $request->getUri());
+        $this->assertSame($uri, (string) $request->getUrl());
 
         $headers         = ['X-Test' => 'Foo'];
         $body            = 'test body';
-        $protocolVersion = '1.0';
+        $protocolVersion = '1.1';
 
         $request = $this->factory->getRequest($method, $uri, $headers, $body, $protocolVersion);
 
@@ -44,7 +44,7 @@ class RequestFactoryTest extends TestCase
 
         $this->assertInstanceOf(RequestInterface::class, $request);
         $this->assertSame(strtoupper($method), $request->getMethod());
-        $this->assertSame($uri, (string) $request->getUri());
+        $this->assertSame($uri, (string) $request->getUrl());
 
         $options = [
             'body'    => 'another=test&form=body',
